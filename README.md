@@ -113,3 +113,35 @@ cp /tmp/hyperledger/org1/admin/msp/signcerts/cert.pem /tmp/hyperledger/org1/peer
 docker-compose up peer1-org1
 docker-compose up peer2-org1
 ```
+
+### To enroll orderer
+```bash
+mkdir -p /tmp/hyperledger/org0/orderer/assets/ca
+cp /tmp/hyperledger/org0/ca/crypto/ca-cert.pem /tmp/hyperledger/org0/orderer/assets/ca/org0-ca-cert.pem
+export FABRIC_CA_CLIENT_HOME=/tmp/hyperledger/org0/orderer
+export FABRIC_CA_CLIENT_TLS_CERTFILES=/tmp/hyperledger/org0/orderer/assets/ca/org0-ca-cert.pem
+fabric-ca-client enroll -d -u https://orderer1-org0:ordererpw@0.0.0.0:7053
+mkdir -p /tmp/hyperledger/org0/orderer/assets/tls-ca
+cp /tmp/hyperledger/tls/ca/crypto/tls-cert.pem /tmp/hyperledger/org0/orderer/assets/tls-ca/tls-ca-cert.pem
+export FABRIC_CA_CLIENT_MSPDIR=tls-msp
+export FABRIC_CA_CLIENT_TLS_CERTFILES=/tmp/hyperledger/org0/orderer/assets/tls-ca/tls-ca-cert.pem
+fabric-ca-client enroll -d -u https://orderer1-org0:ordererPW@0.0.0.0:7052 --enrollment.profile tls --csr.hosts orderer1-org0
+```
+Go to path `/tmp/hyperledger/org0/orderer/tls-msp/keystore` and change the name of the key to `key.pem`.
+
+### To enroll Org0's admin
+```bash
+export FABRIC_CA_CLIENT_HOME=/tmp/hyperledger/org0/admin
+export FABRIC_CA_CLIENT_TLS_CERTFILES=/tmp/hyperledger/org0/orderer/assets/ca/org0-ca-cert.pem
+export FABRIC_CA_CLIENT_MSPDIR=msp
+fabric-ca-client enroll -d -u https://admin-org0:org0adminpw@0.0.0.0:7053
+mkdir /tmp/hyperledger/org0/orderer/msp/admincerts
+cp /tmp/hyperledger/org0/admin/msp/signcerts/cert.pem /tmp/hyperledger/org0/orderer/msp/admincerts/orderer-admin-cert.pem
+```
+
+### To generate the genesis block
+Build and add the `configtxgen` tool to $PATH. 
+```bash
+configtxgen -profile OrgsOrdererGenesis -outputBlock /tmp/hyperledger/org0/orderer/genesis.block -channelID syschannel
+configtxgen -profile OrgsChannel -outputCreateChannelTx /tmp/hyperledger/org0/orderer/channel.tx -channelID mychannel
+```
