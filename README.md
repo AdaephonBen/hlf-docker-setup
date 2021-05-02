@@ -139,6 +139,24 @@ mkdir /tmp/hyperledger/org0/orderer/msp/admincerts
 cp /tmp/hyperledger/org0/admin/msp/signcerts/cert.pem /tmp/hyperledger/org0/orderer/msp/admincerts/orderer-admin-cert.pem
 ```
 
+### To setup MSP folder structure for Orgs 1 and 2
+```bash
+mkdir -p /tmp/hyperledger/org0/msp/admincerts
+mkdir -p /tmp/hyperledger/org0/msp/cacerts
+mkdir -p /tmp/hyperledger/org0/msp/tlscacerts
+mkdir -p /tmp/hyperledger/org0/msp/users
+cp /tmp/hyperledger/org0/ca/crypto/ca-cert.pem /tmp/hyperledger/org0/msp/admincerts/admin-org0-cert.pem
+cp /tmp/hyperledger/org0/admin/msp/cacerts/0-0-0-0-7053.pem /tmp/hyperledger/org0/msp/cacerts/org0-ca-cert.pem
+cp /tmp/hyperledger/tls/ca/crypto/tls-cert.pem /tmp/hyperledger/org0/msp/tlscacerts/tls-ca-cert.pem
+mkdir -p /tmp/hyperledger/org1/msp/admincerts
+mkdir -p /tmp/hyperledger/org1/msp/cacerts
+mkdir -p /tmp/hyperledger/org1/msp/tlscacerts
+mkdir -p /tmp/hyperledger/org1/msp/users
+cp /tmp/hyperledger/org1/ca/crypto/ca-cert.pem /tmp/hyperledger/org1/msp/admincerts/admin-org1-cert.pem
+cp /tmp/hyperledger/org1/admin/msp/cacerts/0-0-0-0-7054.pem /tmp/hyperledger/org1/msp/cacerts/org1-ca-cert.pem
+cp /tmp/hyperledger/tls/ca/crypto/tls-cert.pem /tmp/hyperledger/org1/msp/tlscacerts/tls-ca-cert.pem
+```
+
 ### To generate the genesis block
 Build and add the `configtxgen` tool to $PATH. 
 ```bash
