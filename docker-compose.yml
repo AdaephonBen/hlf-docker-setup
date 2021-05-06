@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   ca-tls:
-    image: hyperledger/fabric-ca
+    image: hyperledger/fabric-ca:1.4.2
     command: sh -c 'fabric-ca-server start -d -b tls-ca-admin:tls-ca-adminpw --port 7052'
     environment:
       - FABRIC_CA_SERVER_HOME=/tmp/hyperledger/fabric-ca/crypto
@@ -15,7 +15,7 @@ services:
     ports:
       - 7052:7052
   rca-org0:
-    image: hyperledger/fabric-ca
+    image: hyperledger/fabric-ca:1.4.2
     command: /bin/bash -c 'fabric-ca-server start -d -b rca-org0-admin:rca-org0-adminpw --port 7053'
     environment:
       - FABRIC_CA_SERVER_HOME=/tmp/hyperledger/fabric-ca/crypto
@@ -28,7 +28,7 @@ services:
     ports:
       - 7053:7053
   rca-org1:
-    image: hyperledger/fabric-ca
+    image: hyperledger/fabric-ca:1.4.2
     command: /bin/bash -c 'fabric-ca-server start -d -b rca-org1-admin:rca-org1-adminpw'
     environment:
       - FABRIC_CA_SERVER_HOME=/tmp/hyperledger/fabric-ca/crypto
@@ -41,7 +41,7 @@ services:
     ports:
       - 7054:7054
   peer1-org1:
-    image: hyperledger/fabric-peer:2.4
+    image: hyperledger/fabric-peer:1.4.2
     environment:
       - CORE_PEER_ID=peer1-org1
       - CORE_PEER_ADDRESS=peer1-org1:7051
@@ -63,7 +63,7 @@ services:
       - /var/run:/host/var/run
       - /tmp/hyperledger/org1/peer1:/tmp/hyperledger/org1/peer1
   peer2-org1:
-    image: hyperledger/fabric-peer:2.4
+    image: hyperledger/fabric-peer:1.4.2
     environment:
       - CORE_PEER_ID=peer2-org1
       - CORE_PEER_ADDRESS=peer2-org1:7051
@@ -86,7 +86,7 @@ services:
       - /var/run:/host/var/run
       - /tmp/hyperledger/org1/peer2:/tmp/hyperledger/org1/peer2
   orderer1-org0:
-    image: hyperledger/fabric-orderer:2.3
+    image: hyperledger/fabric-orderer:1.4.2
     environment:
       - ORDERER_HOME=/tmp/hyperledger/orderer
       - ORDERER_HOST=orderer1-org0
@@ -103,3 +103,23 @@ services:
       - ORDERER_DEBUG_BROADCASTTRACEDIR=data/logs
     volumes:
       - /tmp/hyperledger/org0/orderer:/tmp/hyperledger/org0/orderer/
+  cli-org1:
+    image: hyperledger/fabric-tools:1.4.2
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_ID=cli-org1
+      - CORE_PEER_ADDRESS=peer1-org1:7051
+      - CORE_PEER_LOCALMSPID=org1MSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_ROOTCERT_FILE=/tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem
+      - CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org1/peer1/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/org1
+    command: sh
+    volumes:
+      - /tmp/hyperledger/org1/peer1:/tmp/hyperledger/org1/peer1
+      - /tmp/hyperledger/org1/peer1/assets/chaincode:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
+      - /tmp/hyperledger/org1/admin:/tmp/hyperledger/org1/admin
