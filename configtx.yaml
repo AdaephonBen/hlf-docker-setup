@@ -1,251 +1,113 @@
+################################################################################
+#
+#   Section: Organizations
+#
+#   - This section defines the different organizational identities which will
+#   be referenced later in the configuration.
+#
+################################################################################
 Organizations:
-    - &org0
-        Name: org0
-        SkipAsForeign: false
-        ID: org0MSP
-        MSPDir: /tmp/hyperledger/org0/msp
-        Policies: &SampleOrgPolicies
-            Readers:
-                Type: Signature
-                Rule: "OR('SampleOrg.member')"
-            Writers:
-                Type: Signature
-                Rule: "OR('SampleOrg.member')"
-            Admins:
-                Type: Signature
-                Rule: "OR('SampleOrg.admin')"
-            Endorsement:
-                Type: Signature
-                Rule: "OR('SampleOrg.member')"
-        OrdererEndpoints:
-            - "orderer1-org0:7050"
-    - &org1
-        Name: org1
-        ID: org1MSP
-        MSPDir: /tmp/hyperledger/org1/msp
-        Policies: &SampleOrgPolicies
-            Readers:
-                Type: Signature
-                Rule: "OR('SampleOrg.member')"
-            Writers:
-                Type: Signature
-                Rule: "OR('SampleOrg.member')"
-            Admins:
-                Type: Signature
-                Rule: "OR('SampleOrg.admin')"
-            Endorsement:
-                Type: Signature
-                Rule: "OR('SampleOrg.member')"
 
+  - &org0
 
-Capabilities:
-    Channel: &ChannelCapabilities
-        V2_0: true
-    Orderer: &OrdererCapabilities
-        V2_0: true
-    Application: &ApplicationCapabilities
-        V2_0: true
+    Name: org0
 
-Application: &ApplicationDefaults
-    ACLs: &ACLsDefault
+    # ID to load the MSP definition as
+    ID: org0MSP
 
-        # ACL policy for _lifecycle's "CheckCommitReadiness" function
-        _lifecycle/CheckCommitReadiness: /Channel/Application/Writers
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: /tmp/hyperledger/org0/msp
 
-        # ACL policy for _lifecycle's "CommitChaincodeDefinition" function
-        _lifecycle/CommitChaincodeDefinition: /Channel/Application/Writers
+  - &org1
 
-        # ACL policy for _lifecycle's "QueryChaincodeDefinition" function
-        _lifecycle/QueryChaincodeDefinition: /Channel/Application/Writers
+    Name: org1
 
-        # ACL policy for _lifecycle's "QueryChaincodeDefinitions" function
-        _lifecycle/QueryChaincodeDefinitions: /Channel/Application/Writers
+    # ID to load the MSP definition as
+    ID: org1MSP
 
-        #---Lifecycle System Chaincode (lscc) function to policy mapping for access control---#
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: /tmp/hyperledger/org1/msp
 
-        # ACL policy for lscc's "getid" function
-        lscc/ChaincodeExists: /Channel/Application/Readers
-
-        # ACL policy for lscc's "getdepspec" function
-        lscc/GetDeploymentSpec: /Channel/Application/Readers
-
-        # ACL policy for lscc's "getccdata" function
-        lscc/GetChaincodeData: /Channel/Application/Readers
-
-        # ACL Policy for lscc's "getchaincodes" function
-        lscc/GetInstantiatedChaincodes: /Channel/Application/Readers
-
-        #---Query System Chaincode (qscc) function to policy mapping for access control---#
-
-        # ACL policy for qscc's "GetChainInfo" function
-        qscc/GetChainInfo: /Channel/Application/Readers
-
-        # ACL policy for qscc's "GetBlockByNumber" function
-        qscc/GetBlockByNumber: /Channel/Application/Readers
-
-        # ACL policy for qscc's  "GetBlockByHash" function
-        qscc/GetBlockByHash: /Channel/Application/Readers
-
-        # ACL policy for qscc's "GetTransactionByID" function
-        qscc/GetTransactionByID: /Channel/Application/Readers
-
-        # ACL policy for qscc's "GetBlockByTxID" function
-        qscc/GetBlockByTxID: /Channel/Application/Readers
-
-        #---Configuration System Chaincode (cscc) function to policy mapping for access control---#
-
-        # ACL policy for cscc's "GetConfigBlock" function
-        cscc/GetConfigBlock: /Channel/Application/Readers
-
-        # ACL policy for cscc's "GetChannelConfig" function
-        cscc/GetChannelConfig: /Channel/Application/Readers
-
-        #---Miscellaneous peer function to policy mapping for access control---#
-
-        # ACL policy for invoking chaincodes on peer
-        peer/Propose: /Channel/Application/Writers
-
-        # ACL policy for chaincode to chaincode invocation
-        peer/ChaincodeToChaincode: /Channel/Application/Writers
-
-        #---Events resource to policy mapping for access control###---#
-
-        # ACL policy for sending block events
-        event/Block: /Channel/Application/Readers
-
-        # ACL policy for sending filtered block events
-        event/FilteredBlock: /Channel/Application/Readers
-
-    Organizations:
-
-    Policies: &ApplicationDefaultPolicies
-        LifecycleEndorsement:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Endorsement"
-        Endorsement:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Endorsement"
-        Readers:
-            Type: ImplicitMeta
-            Rule: "ANY Readers"
-        Writers:
-            Type: ImplicitMeta
-            Rule: "ANY Writers"
-        Admins:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
-
-    Capabilities:
-        <<: *ApplicationCapabilities
-
-Orderer: &OrdererDefaults
-    OrdererType: solo
-    Addresses:
-
-    BatchTimeout: 2s
-
-    # is applied.
-    BatchSize:
-
-        MaxMessageCount: 500
-        AbsoluteMaxBytes: 10 MB
-        PreferredMaxBytes: 2 MB
-
-    MaxChannels: 0
-
-    # Organizations lists the orgs participating on the orderer side of the
-    # network.
-    Organizations:
-
-    # Policies defines the set of policies at this level of the config tree
-    # For Orderer policies, their canonical path is
-    #   /Channel/Orderer/<PolicyName>
-    Policies:
-        Readers:
-            Type: ImplicitMeta
-            Rule: "ANY Readers"
-        Writers:
-            Type: ImplicitMeta
-            Rule: "ANY Writers"
-        Admins:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
-        # BlockValidation specifies what signatures must be included in the block
-        # from the orderer for the peer to validate it.
-        BlockValidation:
-            Type: ImplicitMeta
-            Rule: "ANY Writers"
-
-    # Capabilities describes the orderer level capabilities, see the
-    # dedicated Capabilities section elsewhere in this file for a full
-    # description
-    Capabilities:
-        <<: *OrdererCapabilities
+    AnchorPeers:
+        # AnchorPeers defines the location of peers which can be used
+        # for cross org gossip communication.  Note, this value is only
+        # encoded in the genesis block in the Application section context
+        - Host: peer1-org1
+          Port: 7051
 
 ################################################################################
 #
-#   CHANNEL
+#   SECTION: Application
 #
 #   This section defines the values to encode into a config transaction or
-#   genesis block for channel related parameters.
+#   genesis block for application related parameters
 #
 ################################################################################
-Channel: &ChannelDefaults
-    # Policies defines the set of policies at this level of the config tree
-    # For Channel policies, their canonical path is
-    #   /Channel/<PolicyName>
-    Policies:
-        # Who may invoke the 'Deliver' API
-        Readers:
-            Type: ImplicitMeta
-            Rule: "ANY Readers"
-        # Who may invoke the 'Broadcast' API
-        Writers:
-            Type: ImplicitMeta
-            Rule: "ANY Writers"
-        # By default, who may modify elements at this config level
-        Admins:
-            Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
+Application: &ApplicationDefaults
 
+   # Organizations is the list of orgs which are defined as participants on
+   # the application side of the network
+   Organizations:
 
-    # Capabilities describes the channel level capabilities, see the
-    # dedicated Capabilities section elsewhere in this file for a full
-    # description
-    Capabilities:
-        <<: *ChannelCapabilities
 
 ################################################################################
 #
-#   PROFILES
+#   Profile
 #
-#   Different configuration profiles may be encoded here to be specified as
-#   parameters to the configtxgen tool. The profiles which specify consortiums
-#   are to be used for generating the orderer genesis block. With the correct
-#   consortium members defined in the orderer genesis block, channel creation
-#   requests may be generated with only the org member names and a consortium
-#   name.
+#   - Different configuration profiles may be encoded here to be specified
+#   as parameters to the configtxgen tool
 #
 ################################################################################
 Profiles:
 
-    # SampleSingleMSPSolo defines a configuration which uses the Solo orderer,
-    # and contains a single MSP definition (the MSP sampleconfig).
-    # The Consortium SampleConsortium has only a single member, SampleOrg.
-    OrgsOrdererGenesis:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-            Organizations:
-                - *org0
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - *org1
-    OrgsChannel:
-        <<: *ChannelDefaults
-        Consortium: SampleConsortium
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
+  OrgsOrdererGenesis:
+    Orderer:
+        # Orderer Type: The orderer implementation to start
+        # Available types are "solo" and "kafka"
+      OrdererType: solo
+      Addresses:
+      - orderer1-org0:7050
+
+      # Batch Timeout: The amount of time to wait before creating a batch
+      BatchTimeout: 2s
+
+      # Batch Size: Controls the number of messages batched into a block
+      BatchSize:
+
+        # Max Message Count: The maximum number of messages to permit in a batch
+        MaxMessageCount: 10
+
+        # Absolute Max Bytes: The absolute maximum number of bytes allowed for
+        # the serialized messages in a batch.
+        AbsoluteMaxBytes: 99 MB
+
+        # Preferred Max Bytes: The preferred maximum number of bytes allowed for
+        # the serialized messages in a batch. A message larger than the preferred
+        # max bytes will result in a batch larger than preferred max bytes.
+        PreferredMaxBytes: 512 KB
+
+        # Kafka:
+        #   # Brokers: A list of Kafka brokers to which the orderer connects
+        #   # NOTE: Use IP:port notation
+        #   Brokers:
+        #     - 127.0.0.1:9092
+
+        # Organizations is the list of orgs which are defined as participants on
+        # the orderer side of the network
+      Organizations:
+        - *org0
+
+    Consortiums:
+
+        SampleConsortium:
+
+          Organizations:
+            - *org0
             - *org1
+
+  OrgsChannel:
+    Consortium: SampleConsortium
+    Application:
+        <<: *ApplicationDefaults
+        Organizations:
+        - *org1
