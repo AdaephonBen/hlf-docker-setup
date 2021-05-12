@@ -215,3 +215,13 @@ peer channel join -b /tmp/hyperledger/org1/peer1/assets/mychannel.block
 export CORE_PEER_ADDRESS=peer2-org1:7051
 peer channel join -b /tmp/hyperledger/org1/peer1/assets/mychannel.block
 ```
+
+### To install and instantiate Chaincode (Run on CLI)
+```bash
+CORE_PEER_ADDRESS=peer1-org1:7051 peer chaincode install -n jp -v 1.0 -p github.com/adaephonben/junction-project-chaincode
+CORE_PEER_ADDRESS=peer2-org1:7051 peer chaincode install -n jp -v 1.0 -p github.com/adaephonben/junction-project-chaincode
+
+peer chaincode instantiate -C mychannel -n jp -v 1.0 -c '{"Args":[]}' -o orderer1-org0:7050 --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem
+
+
+```
