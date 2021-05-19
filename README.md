@@ -16,23 +16,51 @@ sudo ./start.sh
 ### To join the peers to the channel
 
 ```bash
+docker exec -it cli-org0 bash
+```
+Run the following commands in `cli-org0`.
+```bash
+export CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org0/admin/msp
+peer channel create -c mychannel -f /tmp/hyperledger/org0/peer1/assets/channel.tx -o orderer1-org0:7050 --outputBlock /tmp/hyperledger/org0/peer1/assets/mychannel.block --tls --cafile /tmp/hyperledger/org0/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem
+
+for i in {1..4}
+do
+	CORE_PEER_ADDRESS=peer$i-org0:7051 peer channel join -b /tmp/hyperledger/org0/peer1/assets/mychannel.block
+done
+```
+```bash
 docker exec -it cli-org1 bash
 ```
 Run the following commands in `cli-org1`.
 ```bash
-
 export CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org1/admin/msp
-peer channel create -c mychannel -f /tmp/hyperledger/org1/peer1/assets/channel.tx -o orderer1-org0:7050 --outputBlock /tmp/hyperledger/org1/peer1/assets/mychannel.block --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem
 
-export CORE_PEER_ADDRESS=peer1-org1:7051
-peer channel join -b /tmp/hyperledger/org1/peer1/assets/mychannel.block
-
-export CORE_PEER_ADDRESS=peer2-org1:7051
-peer channel join -b /tmp/hyperledger/org1/peer1/assets/mychannel.block
+for i in {1..4}
+do
+	CORE_PEER_ADDRESS=peer$i-org1:7051 peer channel join -b /tmp/hyperledger/org1/peer1/assets/mychannel.block
+done
 ```
+
 
 ### To install and instantiate Chaincode (Run on CLI)
 
+```bash
+docker exec -it cli-org0 bash
+```
+Run the following commands in `cli-org0`.
+```bash
+cd ../../..
+mkdir adaephonben
+cd adaephonben
+git clone https://github.com/adaephonben/junction-project-chaincode
+
+for i in {1..4}
+do
+	CORE_PEER_ADDRESS=peer$i-org0:7051 peer chaincode install -n jp -v 1.0 -p github.com/adaephonben/junction-project-chaincode
+done
+
+peer chaincode instantiate -C mychannel -n jp -v 1.0 -c '{"Args":[]}' -o orderer1-org0:7050 --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem -P "OutOf(4, 'Org1.member', 'Org1.member', 'Org1.member', 'Org1.member', 'Org2.member', 'Org2.member', 'Org2.member', 'Org2.member')"
+```
 ```bash
 docker exec -it cli-org1 bash
 ```
@@ -43,10 +71,12 @@ mkdir adaephonben
 cd adaephonben
 git clone https://github.com/adaephonben/junction-project-chaincode
 
-CORE_PEER_ADDRESS=peer1-org1:7051 peer chaincode install -n jp -v 1.0 -p github.com/adaephonben/junction-project-chaincode
-CORE_PEER_ADDRESS=peer2-org1:7051 peer chaincode install -n jp -v 1.0 -p github.com/adaephonben/junction-project-chaincode
+for i in {1..4}
+do
+	CORE_PEER_ADDRESS=peer$i-org1:7051 peer chaincode install -n jp -v 1.0 -p github.com/adaephonben/junction-project-chaincode
+done
 
-peer chaincode instantiate -C mychannel -n jp -v 1.0 -c '{"Args":[]}' -o orderer1-org0:7050 --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem -P "OutOf(4, 'Org1.member', 'Org1.member', 'Org1.member', 'Org1.member', 'Org2.member', 'Org2.member', 'Org2.member', 'Org2.member')"
+peer chaincode instantiate -C mychannel -n jp -v 1.0 -c '{"Args":[]}' -o orderer1-org0:7050 --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem -P "OutOf(4, 'org0.member', 'org0.member', 'org0.member', 'org0.member', 'org1.member', 'org1.member', 'org1.member', 'org1.member')"
 ```
 
 ### To execute the chaincode
