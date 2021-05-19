@@ -110,4 +110,5 @@ Profiles:
     Application:
         <<: *ApplicationDefaults
         Organizations:
+        - *org0
         - *org1

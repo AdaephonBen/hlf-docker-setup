@@ -48,3 +48,13 @@ CORE_PEER_ADDRESS=peer2-org1:7051 peer chaincode install -n jp -v 1.0 -p github.
 
 peer chaincode instantiate -C mychannel -n jp -v 1.0 -c '{"Args":[]}' -o orderer1-org0:7050 --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem -P "OutOf(4, 'Org1.member', 'Org1.member', 'Org1.member', 'Org1.member', 'Org2.member', 'Org2.member', 'Org2.member', 'Org2.member')"
 ```
+
+### To execute the chaincode
+
+```bash
+docker exec -it cli-org1 bash
+```
+Run the following commands in `cli-org1`.
+```bash
+
+```
