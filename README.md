@@ -30,7 +30,7 @@ done
 ```
 Run the following command on the host system. 
 ```bash
-cp /tmp/hyperledger/org0/peer1/assets/mychannel.block /tmp/hyperledger/org1/peer1/assets/mychannel.block
+sudo cp /tmp/hyperledger/org0/peer1/assets/mychannel.block /tmp/hyperledger/org1/peer1/assets/mychannel.block
 ```
 ```bash
 docker exec -it cli-org1 bash
@@ -73,7 +73,7 @@ cd ../../..
 mkdir adaephonben
 cd adaephonben
 git clone https://github.com/adaephonben/junction-project-chaincode
-export CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org0/admin/msp
+export CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org1/admin/msp
 
 for i in {1..4}
 do
@@ -86,9 +86,9 @@ peer chaincode instantiate -C mychannel -n jp -v 1.0 -c '{"Args":[]}' -o orderer
 ### To execute the chaincode
 
 ```bash
-docker exec -it cli-org1 bash
+docker exec -it cli-org0 bash
 ```
-Run the following commands in `cli-org1`.
+Run the following commands in `cli-org0`.
 ```bash
 
 ```
