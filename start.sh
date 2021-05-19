@@ -152,6 +152,9 @@ echo "##########################################################################
 echo "Enrolling all admins..."
 echo "#################################################################################################################"
 
+sudo chown -R $USER /tmp/hyperledger
+sudo chmod -R u+rX /tmp/hyperledger
+
 export FABRIC_CA_CLIENT_HOME=/tmp/hyperledger/org0/admin
 export FABRIC_CA_CLIENT_TLS_CERTFILES=/tmp/hyperledger/org0/peer1/assets/ca/org0-ca-cert.pem
 export FABRIC_CA_CLIENT_MSPDIR=msp
@@ -165,6 +168,8 @@ do
 done
 mkdir -p /tmp/hyperledger/org0/admin/msp/admincerts
 cp /tmp/hyperledger/org0/admin/msp/signcerts/cert.pem /tmp/hyperledger/org0/admin/msp/admincerts/org0-admin-cert.pem
+mkdir -p /tmp/hyperledger/org0/orderer/msp/admincerts
+cp /tmp/hyperledger/org0/admin/msp/signcerts/cert.pem /tmp/hyperledger/org0/orderer/msp/admincerts/orderer-admin-cert.pem
 
 export FABRIC_CA_CLIENT_HOME=/tmp/hyperledger/org1/admin
 export FABRIC_CA_CLIENT_TLS_CERTFILES=/tmp/hyperledger/org1/peer1/assets/ca/org1-ca-cert.pem

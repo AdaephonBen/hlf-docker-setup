@@ -22,6 +22,7 @@ Run the following commands in `cli-org0`.
 ```bash
 export CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org0/admin/msp
 peer channel create -c mychannel -f /tmp/hyperledger/org0/peer1/assets/channel.tx -o orderer1-org0:7050 --outputBlock /tmp/hyperledger/org0/peer1/assets/mychannel.block --tls --cafile /tmp/hyperledger/org0/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem
+cp /tmp/hyperledger/org0/peer1/assets/mychannel.block /tmp/hyperledger/org1/peer1/assets/mychannel.block
 
 for i in {1..4}
 do
