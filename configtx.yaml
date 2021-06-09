@@ -96,6 +96,7 @@ Profiles:
         # the orderer side of the network
       Organizations:
         - *org0
+        - *org1
 
     Consortiums:
 
