@@ -80,7 +80,7 @@ do
 	CORE_PEER_ADDRESS=peer$i-org1:7051 peer chaincode install -n jp -v 1.0 -p github.com/adaephonben/junction-project-chaincode
 done
 
-peer chaincode instantiate -C mychannel -n jp -v 1.0 -c '{"Args":[]}' -o orderer1-org0:7050 --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem -P "OutOf(4, 'org0.member', 'org0.member', 'org0.member', 'org0.member', 'org1.member', 'org1.member', 'org1.member', 'org1.member')"
+peer chaincode instantiate -C mychannel -n jp -v 1.0 -c '{"Args":[]}' -o orderer1-org0:7050 --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem
 ```
 
 ### To execute the chaincode
@@ -90,8 +90,8 @@ docker exec -it cli-org0 bash
 ```
 Run the following commands in `cli-org0`.
 ```bash
-peer chaincode invoke -C mychannel -n jp -c '{"Args":["register-event","A1","2","3","vgft5yghj","1623167816","Danger"]}'  --peerAddresses peer1-org0:7051  --tlsRootCertFiles /tmp/hyperledger/org0/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer2-org0:7051  --tlsRootCertFiles /tmp/hyperledger/org0/peer2/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer3-org0:7051  --tlsRootCertFiles /tmp/hyperledger/org0/peer3/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer4-org0:7051  --tlsRootCertFiles /tmp/hyperledger/org0/peer4/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer1-org1:7051  --tlsRootCertFiles /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer2-org1:7051  --tlsRootCertFiles /tmp/hyperledger/org1/peer2/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer3-org1:7051  --tlsRootCertFiles /tmp/hyperledger/org1/peer3/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer4-org1:7051  --tlsRootCertFiles /tmp/hyperledger/org1/peer4/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem -o orderer1-org0:7050
+peer chaincode invoke -C mychannel -n jp -c '{"Args":["register-event","A2","2.3","3.4","43.2","fff","1623167816","Danger"]}'  --peerAddresses peer1-org0:7051  --tlsRootCertFiles /tmp/hyperledger/org0/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer2-org0:7051  --tlsRootCertFiles /tmp/hyperledger/org0/peer2/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer3-org0:7051  --tlsRootCertFiles /tmp/hyperledger/org0/peer3/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer4-org0:7051  --tlsRootCertFiles /tmp/hyperledger/org0/peer4/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer1-org1:7051  --tlsRootCertFiles /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer2-org1:7051  --tlsRootCertFiles /tmp/hyperledger/org1/peer2/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer3-org1:7051  --tlsRootCertFiles /tmp/hyperledger/org1/peer3/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem  --peerAddresses peer4-org1:7051  --tlsRootCertFiles /tmp/hyperledger/org1/peer4/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem -o orderer1-org0:7050 --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-0-0-0-0-7052.pem
 ```
 ```bash
-peer chaincode query -C mychannel -n jp -c '{"Args":["get-event","A1"]}'
+peer chaincode query -C mychannel -n jp -c '{"Args":["get-event","A2"]}'
 ```
