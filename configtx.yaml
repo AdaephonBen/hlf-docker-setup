@@ -13,17 +13,27 @@ Organizations:
     Name: org0
 
     # ID to load the MSP definition as
-    ID: org0MSP
+    ID: org0
 
     # MSPDir is the filesystem path which contains the MSP configuration
     MSPDir: /tmp/hyperledger/org0/msp
+    Policies:
+        Readers:
+            Type: Signature
+            Rule: "OR('org0.member')"
+        Writers:
+            Type: Signature
+            Rule: "OR('org0.member')"
+        Admins:
+            Type: Signature
+            Rule: "OR('org0.admin')"
 
   - &org1
 
     Name: org1
 
     # ID to load the MSP definition as
-    ID: org1MSP
+    ID: org1
 
     # MSPDir is the filesystem path which contains the MSP configuration
     MSPDir: /tmp/hyperledger/org1/msp
@@ -34,6 +44,17 @@ Organizations:
         # encoded in the genesis block in the Application section context
         - Host: peer1-org1
           Port: 7051
+    Policies:
+        Readers:
+            Type: Signature
+            Rule: "OR('org1.member')"
+        Writers:
+            Type: Signature
+            Rule: "OR('org1.member')"
+        Admins:
+            Type: Signature
+            Rule: "OR('org1.admin')"
+
 
 ################################################################################
 #
