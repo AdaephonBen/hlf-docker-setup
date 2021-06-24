@@ -13,27 +13,17 @@ Organizations:
     Name: org0
 
     # ID to load the MSP definition as
-    ID: org0
+    ID: org0MSP
 
     # MSPDir is the filesystem path which contains the MSP configuration
     MSPDir: /tmp/hyperledger/org0/msp
-    Policies:
-        Readers:
-            Type: Signature
-            Rule: "OR('org0.member')"
-        Writers:
-            Type: Signature
-            Rule: "OR('org0.member')"
-        Admins:
-            Type: Signature
-            Rule: "OR('org0.admin')"
 
   - &org1
 
     Name: org1
 
     # ID to load the MSP definition as
-    ID: org1
+    ID: org1MSP
 
     # MSPDir is the filesystem path which contains the MSP configuration
     MSPDir: /tmp/hyperledger/org1/msp
@@ -44,17 +34,6 @@ Organizations:
         # encoded in the genesis block in the Application section context
         - Host: peer1-org1
           Port: 7051
-    Policies:
-        Readers:
-            Type: Signature
-            Rule: "OR('org1.member')"
-        Writers:
-            Type: Signature
-            Rule: "OR('org1.member')"
-        Admins:
-            Type: Signature
-            Rule: "OR('org1.admin')"
-
 
 ################################################################################
 #
@@ -69,6 +48,23 @@ Application: &ApplicationDefaults
    # Organizations is the list of orgs which are defined as participants on
    # the application side of the network
    Organizations:
+
+   Policies:
+      Readers:
+         Type: ImplicitMeta
+         Rule: "ANY Readers"
+      Writers:
+         Type: ImplicitMeta
+         Rule: "ANY Writers"
+      Admins:
+         Type: ImplicitMeta
+         Rule: "MAJORITY Admins"
+      LifecycleEndorsement:
+         Type: ImplicitMeta
+         Rule: "MAJORITY Endorsement"
+      Endorsement:
+         Type: ImplicitMeta
+         Rule: "MAJORITY Endorsement"
 
 
 ################################################################################
